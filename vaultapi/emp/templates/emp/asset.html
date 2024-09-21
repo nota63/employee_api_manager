@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assets</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* General Styling */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* iPhone-like open animation */
+        @keyframes appOpen {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            60% {
+                opacity: 1;
+                transform: scale(1.05); /* Slight overshoot */
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Container for layout with animation */
+        .container {
+            max-width: 600px;
+            max-height: 85vh;
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            animation: appOpen 0.8s ease-out; /* Apply animation */
+        }
+
+        /* Heading and text */
+        h1 {
+            font-size: 22px;
+            font-weight: 600;
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+        }
+
+        /* Form styling */
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        input, select, textarea {
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 25px; /* Fully rounded corners */
+            cursor: pointer;
+            font-size: 14px;
+            text-align: center;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Messages section */
+        .messages {
+            color: #155724;
+            background-color: #d4edda;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        /* Portfolio Section */
+        .portfolio-title {
+            font-weight: 600;
+            font-size: 18px;
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .asset {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            margin-bottom: 10px;
+        }
+
+        .asset strong {
+            font-size: 14px;
+            color: #555;
+        }
+
+        .asset img {
+            max-width: 80px;
+            max-height: 80px;
+            border-radius: 6px;
+            margin-top: 5px;
+        }
+
+        /* Small, consistent buttons */
+        .small-btn {
+            padding: 8px 12px;
+            font-size: 12px;
+            border-radius: 25px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: inline-block;
+            margin-top: 5px;
+            width: 100px; /* Ensure all buttons are same size */
+            text-align: center;
+        }
+
+        .small-btn.green {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .small-btn.red {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .small-btn:hover {
+            opacity: 0.9;
+        }
+
+        /* Popup styling */
+        .popup-content {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            z-index: 1000;
+        }
+
+        /* Custom scrollbar */
+        .container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .container::-webkit-scrollbar-thumb {
+            background-color: #bbb;
+            border-radius: 10px;
+        }
+
+        .container::-webkit-scrollbar-track {
+            background-color: #f4f7f6;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 18px;
+            }
+        }
+
+        /* Keyframes for animation */
+        @keyframes openApp {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Premium section */
+        .premium-text {
+            font-size: 14px;
+            color: #333;
+            font-weight: 500;
+            line-height: 1.6;
+            margin: 15px 0;
+            padding: 10px;
+            border-left: 4px solid #007BFF;
+            background-color: #f9f9f9;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        .premium-text a {
+            color: #007BFF;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .premium-text a:hover {
+            color: #0056b3;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Assign asset to {{ employee.name }}</h1>
+        <p>Note: Fill all fields carefully to avoid errors.</p>
+
+        <section>
+            {% if messages %}
+                <div class="messages">
+                    {% for m in messages %}
+                        <p>{{ m }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </section>
+
+        <section>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Assign to {{ employee.name }}</button>
+            </form>
+        </section>
+
+        <section class="portfolio">
+            {% if data %}
+                <p class="portfolio-title">{{ employee.name }}'s Asset Portfolio</p>
+                {% for v in data %}
+                    <div class="asset">
+                        <strong>Asset Name: {{ v.asset_name }}</strong>
+                        <strong>Description: {{ v.asset_description }}</strong>
+                        {% if v.asset_image %}
+                            <img src="{{ v.asset_image.url }}" alt="{{ v.asset_name }}">
+                        {% endif %}
+                        <strong>Present: {{ v.present }}</strong>
+                        <strong>Date Assigned: {{ v.date_assigned }}</strong>
+                        <a href="http://127.0.0.1:8000/register_employee/emp/">
+                            <button type="button" class="small-btn green">Actions</button>
+                        </a>
+                        <a href="{% url 'delete_asset' v.id%}">
+                            <button type="button" class="small-btn green">Remove</button>
+                        </a>
+                        <button class="small-btn red" onclick="showPopup()">Alert</button>
+                        <div id="popup" class="popup-content">
+                            <p class="premium-text">
+                                CRUD actions are disabled due to API building. Use the following button to access API:
+                                <a href="http://127.0.0.1:8000/register_employee/emp/">Actions</a>
+                            </p>
+                            <button onclick="closePopup()">Close</button>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No assets assigned yet to {{ employee.name }}</p>
+            {% endif %}
+        </section>
+
+        <p class="red-text">CRUD actions can be tested in DjangoRest Framework or Postman via API endpoint.</p>
+        <p class="api-url">API endpoint: http://127.0.0.1:8000/register_employee/emp/</p>
+    </div>
+
+    <script>
+        function showPopup() {
+            document.getElementById('popup').style.display = 'block';
+        }
+
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

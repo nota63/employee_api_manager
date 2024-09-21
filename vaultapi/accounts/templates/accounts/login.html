@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>login to your account</title>
+</head>
+<body>
+
+     <h1>Please login to your account</h1>
+
+     <section>
+         {% if messages %}
+           {% for m in messages %}
+             <p>{{m}}</p>
+           {% endfor %}
+         {% endif %}
+     </section>
+
+     <section>
+         <form method="post">
+             {% csrf_token %}
+             {{form.as_p}}
+             <button type="submit">login</button>
+         </form>
+     </section>
+</body>
+</html>

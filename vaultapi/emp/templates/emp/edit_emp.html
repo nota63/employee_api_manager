@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update {{ employee.name }} Profile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            opacity: 0;
+            animation: fadeIn 0.8s ease-in-out forwards;
+        }
+
+        .container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 400px;
+            height: 400px;
+            overflow-y: auto;
+            position: relative;
+            transform: translateY(30px);
+            animation: slideIn 0.8s ease-in-out forwards;
+        }
+
+        h1 {
+            font-size: 20px;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-bottom: 15px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        form input[type="text"],
+        form input[type="file"],
+        form textarea {
+            padding: 8px;
+            border: 1px solid #bdc3c7;
+            border-radius: 6px;
+            font-size: 12px;
+            font-family: 'Roboto', sans-serif;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        form input[type="text"]:focus,
+        form input[type="file"]:focus,
+        form textarea:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 8px rgba(52, 152, 219, 0.3);
+            outline: none;
+        }
+
+        button {
+            padding: 8px;
+            background-color: #2ecc71;
+            color: #ffffff;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #27ae60;
+            transform: scale(1.05);
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 10px;
+            text-decoration: none;
+            font-size: 14px;
+            color: #3498db;
+            font-weight: 700;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: #2980b9;
+            transform: translateX(-5px);
+        }
+
+        /* Scrollbar Styling */
+        .container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .container::-webkit-scrollbar-track {
+            background: #f5f7fa;
+        }
+
+        .container::-webkit-scrollbar-thumb {
+            background: #bdc3c7;
+            border-radius: 8px;
+        }
+
+        .container::-webkit-scrollbar-thumb:hover {
+            background: #95a5a6;
+        }
+
+        /* iPhone-like Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(30px);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>{{ employee.name }}'s Profile Update</h1>
+        <p>You are going to update the profile of {{ employee.name }} today at {{ actual_time }}. Please ensure all details are correct.</p>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Update</button>
+        </form>
+        <a href="{% url 'register_employee' %}" class="back-link">
+            <strong>Back</strong>
+        </a>
+    </div>
+</body>
+</html>

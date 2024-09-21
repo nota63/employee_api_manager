@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Detail</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- External CSS -->
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .profile-container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            padding: 20px;
+            text-align: center;
+            overflow: hidden;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .profile-container h1 {
+            font-size: 1.8rem;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+
+        .profile-pic {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background-color: #ddd;
+            margin-bottom: 20px;
+            display: inline-block;
+            background-image: url('{{ emp.profile_pic.url }}');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .profile-info {
+            text-align: left;
+        }
+
+        .profile-info div {
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .profile-info div i {
+            color: #007bff;
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        .profile-info div strong {
+            font-size: 1rem;
+            color: #555;
+        }
+
+        .profile-info div span {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        /* Hover effects */
+        .profile-info div:hover {
+            color: #007bff;
+        }
+
+        /* Compact Layout */
+        .profile-info div span,
+        .profile-info div strong {
+            display: inline-block;
+            flex: 1;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="profile-container">
+        <!-- Employee Name -->
+        <h1>{{ emp.name }}</h1>
+
+        <!-- Profile Picture -->
+        <div class="profile-pic">
+            <!-- Image will be loaded from emp.profile_pic.url -->
+        </div>
+
+        <!-- Employee Details -->
+        <div class="profile-info">
+            <div>
+                <i class="fas fa-user"></i>
+                <strong>Name:</strong>
+                <span>{{ emp.name }}</span>
+            </div>
+            <div>
+                <i class="fas fa-envelope"></i>
+                <strong>Email:</strong>
+                <span>{{ emp.email }}</span>
+            </div>
+            <div>
+                <i class="fas fa-phone"></i>
+                <strong>Contact:</strong>
+                <span>{{ emp.contact }}</span>
+            </div>
+            <div>
+                <i class="fas fa-briefcase"></i>
+                <strong>Role:</strong>
+                <span>{{ emp.role }}</span>
+            </div>
+            <div>
+                <i class="fas fa-dollar-sign"></i>
+                <strong>Salary:</strong>
+                <span>{{ emp.salary }}</span>
+            </div>
+            <div>
+                <i class="fas fa-calendar-alt"></i>
+                <strong>Date Joined:</strong>
+                <span>{{ emp.date_joined }}</span>
+            </div>
+             <div>
+    <i class="fas fa-file-pdf"></i>
+    <strong>Resume:</strong>
+    {% if emp.resume %}
+        <a href="{{ emp.resume.url }}" target="_blank">
+            <i class="fas fa-file-pdf"></i> View Resume
+        </a>
+    {% else %}
+        <span>No resume uploaded.</span>
+    {% endif %}
+</div>
+        </div>
+    </div>
+
+</body>
+</html>

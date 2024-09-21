@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Your Projects</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Work+Sans:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        h1 {
+            font-family: 'Work Sans', sans-serif;
+            font-size: 24px;
+            font-weight: 500;
+            color: #333;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out forwards;
+            animation-delay: 0.2s;
+        }
+
+        strong {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 10px;
+            font-weight: 400;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        section {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out forwards;
+            animation-delay: 0.4s;
+        }
+
+        /* Animated message section */
+        .message-section {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            border-radius: 5px;
+            padding: 15px;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out forwards;
+            animation-delay: 0.6s;
+        }
+
+        .project {
+            margin-bottom: 20px;
+            border-bottom: 1px solid #e9ecef;
+            padding-bottom: 15px;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out forwards;
+            animation-delay: 0.8s;
+        }
+
+        .project:last-child {
+            border-bottom: none;
+        }
+
+        .icon {
+            margin-right: 8px;
+            color: #6c757d;
+        }
+
+        .project-name {
+            font-weight: bold;
+            color: #007bff;
+            font-size: 16px;
+        }
+
+        .data {
+            font-family: 'Work Sans', sans-serif;
+            font-weight: 400;
+            font-size: 14px;
+        }
+
+        .btn {
+            display: inline-block;
+            font-size: 14px;
+            color: #fff;
+            background-color: #007bff;
+            padding: 8px 16px;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        .back-home {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .back-home a {
+            font-size: 14px;
+            color: #343a40;
+            text-decoration: underline;
+            font-weight: 500;
+        }
+
+        /* CSS Animation Keyframes */
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 20px;
+            }
+
+            strong {
+                font-size: 12px;
+            }
+
+            .btn {
+                font-size: 12px;
+            }
+        }
+
+        a button {
+            padding: 6px 6px; /* Compact padding */
+            font-size: 12px; /* Smaller font */
+            border-radius: 20px; /* Rounded corners */
+            border: none; /* Remove default border */
+            background-color: #0073e6; /* Fresh color: light blue */
+            color: white; /* Text color */
+            cursor: pointer; /* Pointer on hover */
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        a button:hover {
+            background-color: #005bb5; /* Darker blue on hover */
+            transform: scale(1.05); /* Slightly enlarge on hover */
+        }
+
+        a button:focus {
+            outline: none; /* Remove focus outline */
+        }
+
+        a {
+            text-decoration: none; /* Remove underline from anchor */
+            margin-right: 10px; /* Add space between buttons */
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1><i class="fas fa-briefcase icon"></i> {{ request.user }}'s Created Projects</h1>
+    <strong class="data"><i class="fas fa-calendar-day icon"></i> Date: {{ actual_time }}</strong>
+
+    <section class="message-section">
+        {% if messages %}
+          {% for m in messages %}
+            <strong>{{ m }}</strong>
+          {% endfor %}
+        {% endif %}
+    </section>
+
+    <section>
+        {% if data %}
+        {% for a in data %}
+        <div class="project">
+            <strong class="project-name"><i class="fas fa-project-diagram icon"></i> Project Name: {{ a.name }}</strong>
+            <strong class="data"><i class="fas fa-file-alt icon"></i> Description: {{ a.description }}</strong>
+            <strong class="data"><i class="fas fa-dollar-sign icon"></i> Estimated Budget: ${{ a.estimated_budget }}</strong>
+            {% if a.expected_results %}
+              <strong class="data"><i class="fas fa-file-export icon"></i> Expected Results: <a href="{{ a.expected_results.url }}">View Expected Results</a></strong>
+            {% else %}
+              <strong class="data"><i class="fas fa-file-export icon"></i> File of expected results is hidden for some security reasons but you can view this file in Admin panel.</strong>
+            {% endif %}
+            <strong class="data"><i class="fas fa-users icon"></i> Employees Team:
+                {% for employee in a.employees.all %}
+                    {{ employee.name }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            </strong>
+            <strong class="data"><i class="fas fa-tasks icon"></i> Project Status: {{ a.status }}</strong>
+            <strong class="data"><i class="fas fa-calendar-plus icon"></i> Created At: {{ a.created_at }}</strong>
+            <strong class="data"><i class="fas fa-calendar-check icon"></i> Due Date: {{ a.due_date }}</strong>
+            <a href="{% url 'cancel_project' a.id%}">
+                <button type="submit">Cancel Project</button>
+            </a>
+            <a href="{% url 'update_project' a.id%}">
+                <button type="submit">Update Project</button>
+            </a>
+            <a href="{% url 'send_project' a.id%}">
+                <button type="submit">Share Project</button>
+            </a>
+            <a href="{% url 'assign_task' a.id%}">
+                <button type="submit">Assign Tasks</button>
+            </a>
+            <a href="{% url 'view_task' a.id%}">
+                <button type="submit">View Tasks</button>
+            </a>
+        </div>
+        {% endfor %}
+        {% else %}
+        <strong class="data"><i class="fas fa-exclamation-circle icon"></i> Sorry {{ request.user }}, you haven't created any projects yet as of {{ actual_time }}. <a href="{% url 'create_project' %}">Create New One</a></strong>
+        {% endif %}
+    </section>
+
+    <div class="back-home">
+        <a href="{% url 'register_employee' %}"><i class="fas fa-home icon"></i> Back to home</a>
+    </div>
+
+</body>
+
+</html>

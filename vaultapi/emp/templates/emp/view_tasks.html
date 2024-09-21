@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Your Tasks</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- Styling -->
+    <style>
+        /* General styles */
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background: linear-gradient(to right, #f9f9f9, #ececec);
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            transform: scale(0.8);
+            opacity: 0;
+            animation: appOpen 1s forwards ease-out; /* Reduced to 1s */
+        }
+
+        h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 32px;
+            color: #34495e;
+            margin-bottom: 20px;
+            text-align: center;
+            transform: translateY(50px);
+            opacity: 0;
+            animation: fadeInSlide 0.7s 0.5s forwards ease-out; /* Reduced to 0.7s */
+        }
+
+        section {
+            background-color: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 900px;
+            padding: 30px;
+            margin: 20px 0;
+            opacity: 0;
+            transform: translateY(50px);
+            animation: fadeInSlide 0.7s 0.7s forwards ease-out; /* Reduced to 0.7s */
+            max-height: 600px; /* Limits the height to allow scrolling */
+            overflow-y: auto; /* Enables vertical scrolling */
+            scrollbar-width: thin; /* Firefox */
+            scrollbar-color: #888 #f9f9f9; /* Firefox */
+        }
+
+        section::-webkit-scrollbar {
+            width: 8px; /* Thin scrollbar width */
+        }
+
+        section::-webkit-scrollbar-thumb {
+            background-color: #888; /* Scrollbar color */
+            border-radius: 10px;
+        }
+
+        section::-webkit-scrollbar-track {
+            background: #f9f9f9; /* Track color */
+        }
+
+        h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 20px;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        strong {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #34495e;
+        }
+
+        a {
+            color: #1abc9c;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        a:hover {
+            color: #16a085;
+        }
+
+        .data {
+            font-weight: 500;
+            font-size: 13px;
+        }
+
+        .icon {
+            color: #3498db;
+            margin-right: 5px;
+        }
+
+        hr {
+            border: none;
+            border-bottom: 1px solid #ddd;
+            margin: 20px 0;
+        }
+
+        .footer-links {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .footer-links a {
+            margin: 0 15px;
+            font-size: 14px;
+            color: #2980b9;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 600px) {
+            section {
+                width: 95%;
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            h2 {
+                font-size: 18px;
+            }
+
+            strong {
+                font-size: 12px;
+            }
+        }
+
+        /* iPhone-like animations */
+        @keyframes appOpen {
+            0% {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInSlide {
+            0% {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Title -->
+    <h1>Your Tasks for {{ project }}</h1>
+
+    <!-- Task Details Section -->
+    <section>
+        <h2>Project Overview</h2>
+        <strong>Project Name: {{ project }}</strong>
+        <strong>Created On: {{ project.created_at }}</strong>
+        <strong>Due Date: {{ project.due_date }}</strong>
+        <strong>Budget: {{ project.estimated_budget }}</strong>
+        <strong>Expected Results: <a href="{{ project.expected_results.url }}">Download</a></strong>
+        <strong class="data"><i class="fas fa-users icon"></i> Team Members:
+            {% for employee in project.employees.all %}
+                {{ employee.name }}{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+        </strong>
+
+        <hr>
+
+        <!-- Task Loop -->
+        {% if tasks %}
+            <h2>Task Details</h2>
+            {% for a in tasks %}
+                <strong>Task Name: {{ a.task }}</strong>
+                <strong>Assigned Time: {{ a.time_assigned_task }}</strong>
+                <strong>Due Date: {{ a.due_date }}</strong>
+                <strong>Completed Status: {{ a.completed }}</strong>
+                {% if a.if_media %}
+                  <strong>Task Media: <a href="{{ a.if_media.url }}">View Media</a></strong>
+                {% endif %}
+                <strong class="data"><i class="fas fa-users icon"></i> Assigned To:
+                    {% for employee in a.assigned_to.all %}
+                        {{ employee.name }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </strong>
+
+                <hr>
+            {% endfor %}
+        {% else %}
+            <strong>No tasks found for {{ project }} as of {{ actual_time }}</strong>
+        {% endif %}
+    </section>
+
+    <!-- Footer Links -->
+    <div class="footer-links">
+        <a href="{% url 'view_projects' %}">Back to Projects</a>
+        <a href="{% url 'register_employee' %}">Home</a>
+    </div>
+
+</body>
+</html>

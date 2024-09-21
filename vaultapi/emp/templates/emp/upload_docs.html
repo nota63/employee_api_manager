@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Upload</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.0/gsap.min.js"></script>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        /* Wrapper for layout */
+        .wrapper {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px; /* Add gap between the form and document containers */
+        }
+
+        /* Form container on the left */
+        .form-container {
+            width: 400px;
+            height: 500px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            scrollbar-width: thin; /* Firefox */
+            scrollbar-color: #888 #e0e0e0; /* Firefox */
+        }
+
+        .form-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .form-container::-webkit-scrollbar-track {
+            background: #e0e0e0;
+        }
+
+        .form-container::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+
+        /* Document container on the right */
+        .document-container {
+            width: 400px;
+            height: 500px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+        }
+
+        .document-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .document-container::-webkit-scrollbar-track {
+            background: #e0e0e0;
+        }
+
+        .document-container::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+
+        .document-item {
+            margin-bottom: 15px;
+        }
+
+        /* General styling */
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        input[type="file"],
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <!-- Form Container (Left Side) -->
+        <div class="form-container">
+            <h2>Upload Documents {{ employee.name }}</h2>
+            <p>Upload all documents together in same time  to avoid duplicating!</p>
+            <!-- Display form errors if any -->
+            {% if form.errors %}
+            <div class="error">
+                <ul>
+                    {% for field in form %}
+                      {% for error in field.errors %}
+                         <li>{{ field.label }}: {{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            <!-- Form rendering with {{ form.as_p }} -->
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <!-- Submit button -->
+                <button type="submit">Upload</button>
+            </form>
+        </div>
+
+        <!-- Document Container (Right Side) -->
+        <div class="document-container">
+            <section>
+                {% if doc %}
+     {% for b in doc %}
+       <div class="document-section">
+         <p><strong>ID Proof: </strong>
+            {% if b.id_proof %}
+               <a href="{{ b.id_proof.url }}" target="_blank">View Document</a>
+            {% else %}
+               No document uploaded.
+            {% endif %}
+         </p>
+
+         <p><strong>Address Proof: </strong>
+            {% if b.address_proof %}
+               <a href="{{ b.address_proof.url }}" target="_blank">View Document</a>
+            {% else %}
+               No document uploaded.
+            {% endif %}
+         </p>
+
+         <p><strong>Passport Photo: </strong>
+            {% if b.passport_photo %}
+               <a href="{{ b.passport_photo.url }}" target="_blank">View Document</a>
+            {% else %}
+               No document uploaded.
+            {% endif %}
+         </p>
+
+         <p><strong>Degree Certificate: </strong>
+            {% if b.degree_certificate %}
+               <a href="{{ b.degree_certificate.url }}" target="_blank">View Document</a>
+            {% else %}
+               No document uploaded.
+            {% endif %}
+         </p>
+
+         <p><strong>Transcript: </strong>
+            {% if b.transcript %}
+               <a href="{{ b.transcript.url }}" target="_blank">View Document</a>
+            {% else %}
+               No document uploaded.
+            {% endif %}
+         </p>
+
+         <p><strong>Professional Certifications: </strong>
+            {% if b.professional_certifications %}
+               <a href="{{ b.professional_certifications.url }}" target="_blank">View Document</a>
+            {% else %}
+               No document uploaded.
+            {% endif %}
+         </p>
+
+         <p><strong>Offer Letter: </strong>
+            {% if b.offer_letter %}
+               <a href="{{ b.offer_letter.url }}" target="_blank">View Document</a>
+            {% else %}
+               No document uploaded.
+            {% endif %}
+         </p>
+
+         <p><strong>Relieving Letter: </strong>
+            {% if b.relieving_letter %}
+               <a href="{{ b.relieving_letter.url }}" target="_blank">View Document</a>
+            {% else %}
+               No document uploaded.
+            {% endif %}
+         </p>
+
+         <p><strong>Experience Letter: </strong>
+            {% if b.experience_letter %}
+               <a href="{{ b.experience_letter.url }}" target="_blank">View Document</a>
+            {% else %}
+               No document uploaded.
+            {% endif %}
+         </p>
+
+         <p><strong>Pay Slip: </strong>
+            {% if b.pay_slip %}
+               <a href="{{ b.pay_slip.url }}" target="_blank">View Document</a>
+            {% else %}
+               No document uploaded.
+            {% endif %}
+         </p>
+
+         <p><strong>PAN Card: </strong>
+            {% if b.pan_card %}
+               <a href="{{ b.pan_card.url }}" target="_blank">View Document</a>
+            {% else %}
+               No document uploaded.
+            {% endif %}
+         </p>
+
+         <p><strong>Tax Documents: </strong>
+            {% if b.tax_documents %}
+               <a href="{{ b.tax_documents.url }}" target="_blank">View Document</a>
+            {% else %}
+               No document uploaded.
+            {% endif %}
+         </p>
+
+         <p><strong>Bank Details: </strong>
+            {% if b.bank_details %}
+               <a href="{{ b.bank_details.url }}" target="_blank">View Document</a>
+            {% else %}
+               No document uploaded.
+            {% endif %}
+         </p>
+
+         <p><strong>Police Verification: </strong>
+            {% if b.police_verification %}
+               <a href="{{ b.police_verification.url }}" target="_blank">View Document</a>
+            {% else %}
+               No document uploaded.
+            {% endif %}
+         </p>
+
+         <p><strong>Medical Certificate: </strong>
+            {% if b.medical_certificate %}
+               <a href="{{ b.medical_certificate.url }}" target="_blank">View Document</a>
+            {% else %}
+               No document uploaded.
+            {% endif %}
+         </p>
+
+         <p><strong>Reference Letter: </strong>
+            {% if b.reference_letter %}
+               <a href="{{ b.reference_letter.url }}" target="_blank">View Document</a>
+            {% else %}
+               No document uploaded.
+            {% endif %}
+         </p>
+
+         <p><strong>Other Documents: </strong>
+            {% if b.other_documents %}
+               <a href="{{ b.other_documents.url }}" target="_blank">View Document</a>
+            {% else %}
+               No document uploaded.
+            {% endif %}
+         </p>
+
+         <p><strong>Uploaded At: </strong>{{ b.uploaded_at }}</p>
+           <a href="{% url 'delete_docs' b.id%}">
+               <button type="submit">Delete All</button>
+           </a>
+           {% endfor %}
+           {% endif %}
+       </div>
+
+
+
+            </section>
+        </div>
+    </div>
+
+    <script>
+        // GSAP animation for the form and document containers
+        gsap.from(".form-container, .document-container", {
+            duration: 1,
+            opacity: 0,
+            y: -50,
+            ease: "power3.out"
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>home</title>
+</head>
+<body>
+
+    <section>
+        {% if user.is_authenticated%}
+          <h2>Welcome back {{request.user}}</h2>
+           An Employees Rest Api for Owners
+           <br>
+           <a href="{% url 'logout'%}">
+               <strong>logout</strong>
+           </a>
+        {% else %}
+           <a href="{% url 'signup'%}">
+               <strong>signup</strong>
+           </a>
+           or
+           <a href="{% url 'login'%}">
+               <strong>login</strong>
+           </a>
+        {% endif %}
+    </section>
+
+
+<section>
+    <a href="{% url 'register_employee'%}">
+        <button type="submit">Employee registration</button>
+    </a>
+
+
+</section>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Mailbox</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .mailbox {
+            width: 400px;
+            height: 500px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            opacity: 0;
+            transform: scale(0.8);
+            animation: open 0.5s forwards;
+            position: relative;
+        }
+        @keyframes open {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        .logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px auto;
+            background-color: #f4f4f4; /* Fallback for browsers that do not support images */
+        }
+        .logo img {
+            width: 100%;
+            height: auto;
+        }
+        h1 {
+            font-size: 18px;
+            margin: 10px 0;
+            text-align: center;
+        }
+        p {
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+            margin: 0 10px;
+        }
+        .mail-entry {
+            border-bottom: 1px solid #eaeaea;
+            padding: 10px 5px;
+            font-size: 13px; /* Slightly larger for better readability */
+        }
+        .mail-entry:last-child {
+            border-bottom: none;
+        }
+        strong {
+            display: block;
+            font-size: 12px;
+            color: #333;
+            font-weight: 500; /* Bolder for emphasis */
+        }
+        .no-emails {
+            text-align: center;
+            color: #999;
+            padding: 20px 0;
+            font-size: 12px;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background-color 0.3s;
+            margin-top: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+
+
+        .green-text {
+    color: #28a745; /* Bootstrap green color */
+}
+
+    </style>
+</head>
+<body>
+    <div class="mailbox">
+        <div class="logo">
+            <img src="https://icons.veryicon.com/png/Application/Mavrick/Mail.png" alt="Logo">
+        </div>
+        <section>
+            {% if messages %}
+              {% for m in messages %}
+                 <p>{{m}}</p>
+              {% endfor %}
+            {% endif %}      
+        </section>
+        <h1>Your Mailbox</h1>
+        <p>You can only send emails from here. Please use your Gmail app to receive emails.</p>
+        {% if mails %}
+            {% for mail in mails %}
+                <div class="mail-entry">
+                    <div>
+                        <strong class="green-text">Status: {{ mail.status }} At {{ mail.date }}</strong>
+                        <strong>Recipient:</strong> {{ mail.receivers_name }}
+                    </div>
+                    
+                    <a href="{% url 'detail_email' mail.id %}">
+                        <button type="button">Details</button>
+                    </a>
+                    <a href="{% url 'clear_email' mail.id %}">
+                        <button type="button">Remove</button>
+                    </a>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="no-emails">No emails sent yet!</p>
+        {% endif %}
+    </div>
+</body>
+</html>

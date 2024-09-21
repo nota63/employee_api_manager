@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee API Manager</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            color: #d0d0d0;
+            background: #1e1e1e;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            width: 85%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #2a2a2a;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transform: scale(0.95);
+            animation: appOpen 1.2s ease-out forwards;
+        }
+
+        /* Animating the container to resemble an iPhone app opening */
+        @keyframes appOpen {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            60% {
+                opacity: 1;
+                transform: scale(1.05);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        h1, h2, h3 {
+            color: #f5f5f5;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 2rem;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: #bdbdbd;
+        }
+
+        code {
+            font-family: 'Courier New', Courier, monospace;
+            background: #333;
+            color: #f8f8f2;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-size: 0.9rem;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s ease forwards 1.5s;
+        }
+
+        /* Fade-in and slide-up effect for pre elements */
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        ul {
+            list-style-type: disc;
+            padding-left: 40px;
+            color: #bdbdbd;
+        }
+
+        ul li {
+            margin-bottom: 10px;
+        }
+
+        /* Usage examples and other sections */
+        .usage-examples, .section {
+            background: #2a2a2a;
+            border: 1px solid #444;
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s ease forwards 0.5s;
+        }
+
+        /* Button styles for modern design */
+        button {
+            padding: 10px 20px;
+            background-color: #f5a623;
+            color: #1e1e1e;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #ffcc70;
+            transform: scale(1.05);
+        }
+
+        /* Smooth scrolling behavior */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: #555;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Employee API Manager</h1>
+
+        <div class="section">
+            <h2>Project Overview</h2>
+            <p>The Employee API Manager is a Django-based application designed to manage employees, their assets, documents, salary slips, and more.</p>
+        </div>
+
+        <div class="section">
+            <h2>Features</h2>
+            <ul>
+                <li><strong>User Authentication</strong>: JWT and session-based authentication.</li>
+                <li><strong>Employee Management</strong>: Add, edit, delete, and retrieve employee details.</li>
+                <li><strong>Document Uploads</strong>: Attach and manage documents related to employees.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Installation & Setup</h2>
+            <pre><code>git clone https://github.com/your-repo/employee-api-manager.git
+cd employee-api-manager
+python -m venv env
+source env/bin/activate
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py createsuperuser
+python manage.py runserver</code></pre>
+        </div>
+
+        <div class="section usage-examples">
+            <h2>Usage Examples</h2>
+            <h3>Registering an Employee</h3>
+            <pre><code>import requests
+
+data = {
+    'name': 'John Doe',
+    'email': 'john@example.com',
+}
+
+response = requests.post('http://127.0.0.1:8000/api/employees/', json=data)
+print(response.json())</code></pre>
+        </div>
+    </div>
+</body>
+</html>

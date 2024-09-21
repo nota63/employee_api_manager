@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee API Database Manager</title>
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <!-- External CSS -->
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to right, #f4f4f9, #e0e0eb);
+            color: #333;
+            margin: 0;
+            padding: 0;
+            animation: fadeIn 1.5s ease;
+        }
+
+        h1 {
+            text-align: center;
+            color: #007bff;
+            font-size: 2.5rem;
+            margin-top: 20px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Left side form container */
+        .form-container {
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            width: 280px;
+            height: 350px;
+            padding: 15px;
+            overflow-y: auto;
+            animation: slideInLeft 1s ease-in-out;
+        }
+
+        .form-container h2 {
+            text-align: center;
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        form input, form button {
+            padding: 8px;
+            font-size: 0.9rem;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        form input:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+        form button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s;
+            border-radius: 20px;
+        }
+
+        form button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        /* Right side employee data */
+        .employee-data {
+            flex: 1;
+            margin-left: 40px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            overflow-y: auto;
+            height: 350px;
+            animation: fadeInRight 1s ease-in-out;
+        }
+
+        .employee-data h2 {
+            text-align: center;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .employee-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            justify-content: space-between;
+        }
+
+        .employee-card {
+            background-color: #f9f9f9;
+            padding: 12px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            transition: box-shadow 0.3s ease, transform 0.3s;
+        }
+
+        .employee-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .employee-card strong {
+            display: block;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .no-employee {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 20px;
+        }
+
+        /* Animations */
+        @keyframes slideInLeft {
+            0% {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+            100% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInRight {
+            0% {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            100% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+
+        /* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap');
+
+/* Premium styled heading */
+.premium-heading {
+    font-family: 'Playfair Display', serif;
+    color: #28a745; /* Green color */
+    font-size: 2rem;
+    text-align: center;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+}
+
+
+
+        /* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@400&display=swap');
+
+/* Premium look for API Access section */
+.api-access {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.2rem;
+    color: #333;
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    letter-spacing: 0.5px;
+}
+
+.api-access a {
+    font-family: 'Playfair Display', serif;
+    color: #007bff;
+    text-decoration: none;
+    font-size: 1.1rem;
+    transition: color 0.3s ease;
+}
+
+.api-access a:hover {
+    color: #0056b3;
+}
+
+/* Premium styled button */
+.api-button {
+    background-color: #28a745; /* Premium green color */
+    color: white;
+    padding: 6px 20px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 15px;
+}
+
+.api-button:hover {
+    background-color: #218838; /* Slightly darker on hover */
+    transform: scale(1.05);
+}
+
+
+
+        /* Styling for Create Employee section */
+.create-employee-heading {
+    font-family: 'Playfair Display', serif; /* Premium font */
+    color: #007bff;
+    font-size: 1.8rem;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.note {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    color: #ff4d4d; /* Warning color */
+    text-align: center;
+    background-color: #fff3f3; /* Light red background to highlight the note */
+    padding: 8px 12px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+
+        /* Container for messages */
+msg {
+    margin: 20px 0;
+}
+
+/* Style for individual messages */
+h5 {
+    display: flex;
+    align-items: center;
+    background-color: #d4edda; /* Light green background */
+    border: 1px solid #c3e6cb; /* Slightly darker green border */
+    border-radius: 5px; /* Rounded corners */
+    padding: 10px;
+    color: #155724; /* Dark green text */
+    font-weight: 500;
+    position: relative;
+    overflow: hidden;
+    animation: fadeIn 1s ease-in-out; /* Smooth fade-in animation */
+}
+
+/* Checkmark styling */
+h5::before {
+    content: "✔"; /* Checkmark symbol */
+    color: #155724; /* Same color as the text */
+    font-size: 1.5rem; /* Adjust size of the checkmark */
+    margin-right: 10px;
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+        .compact-api-manager {
+    background-color: rgba(255, 255, 255, 0.1); /* Transparent background */
+    padding: 10px;
+    width: 220px;  /* Compact width */
+    margin: 10px auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);  /* Light shadow */
+    text-align: center;
+    font-family: 'Arial', sans-serif;
+    border: 1px solid rgba(255, 255, 255, 0.2);  /* Subtle border */
+}
+
+.compact-api-manager h1 {
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.compact-api-manager p {
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.compact-api-manager button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 4px 8px;  /* Smaller padding for compact design */
+    border-radius: 3px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    margin: 4px auto;  /* Central alignment */
+}
+
+.compact-api-manager button:hover {
+    background-color: #0056b3;
+}
+
+.compact-api-manager .auth-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 8px;  /* Space between buttons */
+}
+
+.compact-api-manager a {
+    text-decoration: none;
+}
+
+
+          /* Compact container styling */
+        .system-container {
+            position: fixed; /* Fixed positioning to stay in the same place on scroll */
+            top: 2px; /* Distance from the top of the page */
+            right: 10px; /* Distance from the right edge of the page */
+            width: 250px; /* Reduced width */
+            height: 0px;
+            padding: 1px; /* Reduced padding */
+            background-color: rgba(255, 255, 255, 0.8); /* White background with transparency */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Reduced shadow for a lighter look */
+            border-radius: 8px;
+            font-family: 'Arial', sans-serif;
+            z-index: 1000; /* Ensure it stays above other content */
+            font-size: 12px; /* Smaller font size for compactness */
+        }
+
+        /* Flex layout for items */
+        .system-info {
+            display: flex;
+            flex-direction: column;
+            gap: 6px; /* Reduced gap between items */
+        }
+
+        .system-info ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .system-info li {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 4px 0; /* Reduced padding for compactness */
+        }
+
+        .system-info i {
+            margin-right: 6px; /* Reduced margin for compactness */
+            color: #007BFF;
+        }
+
+        /* Text and icons aligned */
+        .system-info span {
+            display: flex;
+            align-items: center;
+        }
+
+        /* Make the layout responsive */
+        @media (max-width: 300px) {
+            .system-container {
+                width: 90%;
+                font-size: 10px; /* Smaller font size for very small screens */
+                padding: 6px; /* Reduced padding */
+            }
+
+            .system-info li {
+                padding: 2px 0; /* Further reduced padding for very small screens */
+            }
+
+            .system-info i {
+                margin-right: 4px; /* Further reduced margin for very small screens */
+            }
+        }
+
+
+      /* Import Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600&display=swap');
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #f0f4f8; /* Light background for contrast */
+    font-family: 'Quicksand', sans-serif; /* Modern Google font */
+}
+
+/* Import Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&display=swap');
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #f5f7fa; /* Light background */
+    font-family: 'Playfair Display', serif; /* Formal and premium Google font */
+}
+
+/* Description text styling */
+.description {
+    font-family: 'Playfair Display', serif;
+    color: #34495e; /* Elegant dark color */
+    font-size: 20px; /* Premium, formal size */
+    font-weight: 700; /* Bold weight for premium look */
+    margin-bottom: 10px;
+    text-align: center;
+    line-height: 1.5; /* Better readability */
+}
+
+/* Import Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&display=swap');
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #f5f7fa; /* Light background */
+    font-family: 'Playfair Display', serif; /* Formal and premium Google font */
+}
+
+/* Description text styling */
+.description {
+    font-family: 'Playfair Display', serif;
+    color: #34495e; /* Elegant dark color */
+    font-size: 16px; /* Smaller text size for compactness */
+    font-weight: 700; /* Bold weight for premium look */
+    margin-bottom: 8px;
+    text-align: center;
+    line-height: 1.3; /* Reduced line height for a more compact feel */
+}
+
+/* Container for the form */
+.form {
+    position: absolute;
+    top: 5px;
+    left: 10px;
+    padding: 16px;
+    background-color:#FFFFFF;
+    border: 1px solid #dedede; /* Light border for clean look */
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+    max-width: 240px; /* More compact container */
+    text-align: center;
+}
+
+/* Textarea input field styling */
+.form textarea {
+    width: 100%;
+    padding: 6px;
+    margin-bottom: 8px;
+    border: 1px solid #bdc3c7;
+    border-radius: 6px;
+    font-size: 14px; /* Smaller font for input field */
+    font-family: 'Playfair Display', serif;
+    resize: vertical;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Button styling */
+.form button {
+    width: 100%;
+    padding: 6px;
+    background-color: #2ecc71;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    font-family: 'Playfair Display', serif; /* Premium font */
+    font-size: 14px; /* Reduced button text size */
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.form button:hover {
+    background-color: #27ae60;
+    transform: scale(1.05);
+}
+
+/* Responsive for smaller screens */
+@media (max-width: 600px) {
+    .form {
+        max-width: 90%;
+        left: 10px;
+        right: 10px;
+    }
+}
+
+/* Button Styling */
+a button {
+    display: inline-block;
+    padding: 4px 8px; /* Very compact padding */
+    background-color: #2ecc71; /* Fresh green color */
+    color: #ffffff;
+    border: none;
+    border-radius: 12px; /* Rounded corners */
+    font-size: 12px; /* Smaller text size */
+    font-family: 'Roboto', sans-serif; /* Consistent font */
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    text-decoration: none;
+    margin: 2px; /* Minimal space between buttons */
+}
+
+/* Button Hover Effect */
+a button:hover {
+    background-color: #27ae60; /* Darker green for hover */
+    transform: scale(1.05);
+}
+
+/* Button Focus Effect */
+a button:focus {
+    outline: none;
+    box-shadow: 0 0 0 1px rgba(46, 204, 113, 0.5); /* Outline for focus */
+}
+
+/* Button Disabled State */
+a button:disabled {
+    background-color: #bdc3c7;
+    cursor: not-allowed;
+}
+
+
+/* Styling for the message container */
+.message-overlay {
+    position: fixed;
+    top: 20px; /* Adjust this value for how far down from the top you want it */
+    right: 20px; /* Place it in the corner or adjust as needed */
+    width: 250px; /* Small compact size */
+    padding: 10px;
+    background-color: #f7f7f7; /* Light background */
+    border: 1px solid #ddd; /* Subtle border */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+    z-index: 999; /* Ensure it appears above other content */
+    text-align: center; /* Center text inside the container */
+}
+
+/* Scrollbar styling for a premium look */
+.message-overlay::-webkit-scrollbar {
+    width: 8px;
+}
+
+.message-overlay::-webkit-scrollbar-thumb {
+    background-color: #2ecc71; /* Fresh green thumb */
+    border-radius: 4px;
+}
+
+.message-overlay::-webkit-scrollbar-track {
+    background-color: #f1f1f1; /* Light background track */
+}
+
+/* Message text styling */
+.message-overlay h5 {
+    font-family: 'Roboto', sans-serif;
+    font-size: 12px; /* Smaller font for compact look */
+    color: #34495e; /* Elegant dark color */
+    margin: 4px 0; /* Minimal margin between messages */
+    word-wrap: break-word; /* Ensure long messages break to next line */
+}
+
+
+
+
+        .built-using {
+    display: flex;
+    justify-content: center; /* Centers logos horizontally */
+    align-items: center; /* Aligns logos vertically */
+    gap: 20px; /* Adds space between logos */
+    padding: 20px; /* Adds some padding around the section */
+    background-color: #f9f9f9; /* Light background color for contrast */
+    border-radius: 10px; /* Rounded corners for a modern look */
+}
+
+.built-using img {
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effect */
+    filter: grayscale(50%); /* Slight grayscale for a sleek look */
+}
+
+.built-using img:hover {
+    transform: scale(1.1); /* Slightly enlarge the logo on hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Adds shadow on hover */
+    filter: grayscale(0%); /* Removes grayscale on hover */
+}
+
+
+
+
+
+
+
+
+    </style>
+</head>
+
+<body>
+
+    <h1>Employee API Database Manager</h1>
+
+ <section class="compact-api-manager">
+    {% if user.is_authenticated %}
+       <h1>Welcome back, {{request.user}}</h1>
+       <p>Your personal API Manager</p>
+       <a href="{% url 'logout' %}">
+           <button type="submit">Logout</button>
+       </a>
+       <a href="http://127.0.0.1:8000/register_employee/emp/">
+           <button type="submit">Access API</button>
+       </a>
+       <a href="{% url 'token'%}">
+           <button type="submit">Get Token</button>
+       </a>
+       <a href="{% url 'verify'%}">
+           <button type="submit">Verify Token</button>
+       </a>
+        <a href="{% url 'refresh'%}">
+           <button type="submit">Refresh Token</button>
+       </a>
+        <a href="{% url 'guide'%}">
+           <button type="submit">Quick Guide</button>
+       </a>
+         <a href="{% url 'shutdown'%}">
+           <button type="submit">Shutdown</button>
+       </a>
+       <a href="{% url 'create_project'%}">
+           <button type="submit">Create Project</button>
+       </a>
+       <a href="{% url 'view_projects'%}">
+           <button type="submit">Projects and actions</button>
+       </a>
+         <a href="{% url 'send_mail'%}">
+           <button type="submit">Mailbox</button>
+       </a>
+    
+       
+    {% else %}
+       <h1>Hello, {{request.user}}</h1>
+       <p>Please authenticate to use our services</p>
+       <div class="auth-buttons">
+           <a href="{% url 'signup' %}">
+               <button type="submit">Signup</button>
+           </a>
+           <a href="{% url 'login' %}">
+               <button type="submit">Login</button>
+           </a>
+       </div>
+    {% endif %}
+</section>
+
+
+      <!-- System Information Section with Icons -->
+    <!-- Compact container for system information -->
+    <div class="system-container">
+        <h2 style="text-align:center;">System Info</h2>
+        <div class="system-info">
+            <ul>
+                <li><span><i class="fas fa-microchip"></i>CPU Usage:</span><span>{{ cpu_usage }}%</span></li>
+                <li><span><i class="fas fa-memory"></i>Total Memory:</span><span>{{ total_memory|floatformat:2 }} GB</span></li>
+                <li><span><i class="fas fa-memory"></i>Used Memory:</span><span>{{ used_memory|floatformat:2 }} GB</span></li>
+                <li><span><i class="fas fa-memory"></i>Memory Usage:</span><span>{{ memory_percent }}%</span></li>
+                <li><span><i class="fas fa-hdd"></i>Total Disk Space:</span><span>{{ total_disk|floatformat:2 }} GB</span></li>
+                <li><span><i class="fas fa-hdd"></i>Used Disk Space:</span><span>{{ used_disk|floatformat:2 }} GB</span></li>
+                <li><span><i class="fas fa-hdd"></i>Disk Usage:</span><span>{{ disk_percent }}%</span></li>
+                <li><span><i class="fas fa-network-wired"></i>Network Sent:</span><span>{{ bytes_sent|floatformat:2 }} MB</span></li>
+                <li><span><i class="fas fa-network-wired"></i>Network Received:</span><span>{{ bytes_recv|floatformat:2 }} MB</span></li>
+                {% if battery_percent %}
+                    <li><span><i class="fas fa-battery-half"></i>Battery Percentage:</span><span>{{ battery_percent }}%</span></li>
+                    <li><span><i class="fas fa-plug"></i>Power Plugged:</span><span>{{ power_plugged|yesno:"Yes,No" }}</span></li>
+                    <li><span><i class="fas fa-hourglass-half"></i>Time Left:</span>
+                        <span>
+                        {% if time_left %}
+                            {{ time_left|floatformat:2 }} seconds
+                        {% else %}
+                            Unlimited/Plugged in
+                        {% endif %}
+                        </span>
+                    </li>
+                {% else %}
+                    <li><span><i class="fas fa-battery-empty"></i>Battery Information:</span><span>Not Available</span></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+<!--    <br>-->
+<!--    <br>-->
+<!--    <br>-->
+<!--    <br>-->
+<!--    <br>-->
+
+
+<section class="message-overlay">
+    {% if messages %}
+        {% for m in messages %}
+            <h5>{{m}}</h5>
+        {% endfor %}
+    {% endif %}
+</section>
+
+    <br>
+    <br>
+    <br>
+
+
+
+
+    <div class="container">
+        <!-- Form on the left side -->
+        <div class="form-container">
+           <h2 class="create-employee-heading">Create an Employee</h2>
+           <p class="note">Note: fill all fields to avoid any potential errors!</p>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Add to API</button>
+            </form>
+        </div>
+
+        <!-- Employee data on the right side -->
+        <div class="employee-data">
+            {% if data %}
+               <h2 class="premium-heading">API in Graphical User Interface</h2>
+
+                <div class="employee-list">
+                    {% for a in data %}
+                        <div class="employee-card">
+                            <strong>{{ a.name }}</strong>
+                            <strong>{{ a.role }}</strong>
+                            <strong>{{ a.date_joined }}</strong>
+                            <a href="{% url 'emp_detail' a.id%}">
+                                <button type="submit">View Details</button>
+                            </a>
+                            <a href="{% url 'upload_docs' a.id%}">
+                                <button type="submit">Documents</button>
+                            </a>
+                            <a href="{% url 'assets' a.id%}">
+                                <button type="submit">Assets</button>
+                            </a>
+                            <a href="{% url 'salary_slips' a.id%}">
+                                <button type="submit">Salary Slips</button>
+                            </a>
+                             <a href="{% url 'delete_emp' a.id%}">
+                                <button type="submit">Delete Employee</button>
+                            </a>
+                             <a href="{% url 'edit_emp' a.id%}">
+                                <button type="submit">Edit profile</button>
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="no-employee">No Employee added yet! Kindly add to build your Employee API for your company 😑</p>
+            {% endif %}
+        </div>
+    </div>
+
+   <section class="form">
+    <p class="description">
+        Django Rest API made your work easy. Now you can write your entire paragraph here, then move your cursor where you want it to be typed, the writing will start in 5 seconds and it will write your paragraph.
+    </p>
+    <form method="get">
+        <textarea name="txt" placeholder="Enter your paragraph here" rows="4" cols="25"></textarea>
+        <button type="submit">Start</button>
+    </form>
+</section>
+
+     <section class="built-using">
+
+         <img src="https://www.django-rest-framework.org/img/logo.png" height="60" alt="rest-framework">
+
+         <img src="https://th.bing.com/th/id/OIP.pIi0CfGswG8JLy2f1w6dLQHaHa?rs=1&pid=ImgDetMain" height="60" alt="pycharm">
+
+         <img src="https://cdn.freebiesupply.com/logos/thumbs/2x/django-community-logo.png" height="60" alt="django">
+
+         <img src="https://cdn4.iconfinder.com/data/icons/logos-and-brands/512/267_Python_logo-1024.png" height="60" alt="python">
+
+     </section>
+
+
+
+</body>
+
+</html>
+

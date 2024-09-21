@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shutdown The system</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #ff416c, #ff4b2b);
+            font-family: 'Poppins', sans-serif;
+            color: #ffffff;
+        }
+
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+            width: 260px;
+        }
+
+        .shutdown-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .message {
+            font-size: 18px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .countdown {
+            font-size: 50px;
+            color: #ffffff;
+            font-weight: 600;
+            background: linear-gradient(to right, #ffafbd, #ffc3a0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: pulse 1s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .countdown-end {
+            font-size: 32px;
+            color: #ffdfba;
+            background: none;
+        }
+
+        .icon {
+            width: 40px;
+            height: 40px;
+            fill: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="shutdown-icon">
+            <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="6" x2="12" y2="12"></line>
+            </svg>
+        </div>
+        <div class="message">Your system will shutdown in</div>
+        <div id="countdown" class="countdown">5</div>
+    </div>
+
+    <script>
+        let countdownElement = document.getElementById('countdown');
+        let countdownValue = 5;
+
+        let countdownInterval = setInterval(() => {
+            countdownValue--;
+            countdownElement.textContent = countdownValue;
+
+            if (countdownValue <= 0) {
+                clearInterval(countdownInterval);
+                countdownElement.textContent = 'Shutdown!';
+                countdownElement.classList.add('countdown-end');
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
