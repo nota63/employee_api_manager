@@ -1,4 +1,4 @@
-from .models import Employee, Document, Assets, SalarySlips, Project, Task
+from .models import Employee, Document, Assets, SalarySlips, Project, Task, Banks
 from rest_framework import serializers
 
 
@@ -33,7 +33,12 @@ class ProjectSerializer(serializers.ModelSerializer):
 class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model=Task
-        fields=['id','task','if_media','description','due_date', 'completed', 'project','assigned_to']
+        fields=['id','task','if_media','description','due_date','completed','project','assigned_to']
+
+class BankSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Banks
+        fields=['id','bank_name','account_number','ifsc_code','upi_id','employee','updated_at']
 
 
 class EmployeeSerializer(serializers.ModelSerializer):
@@ -42,7 +47,8 @@ class EmployeeSerializer(serializers.ModelSerializer):
     slips = SalarySlipsSerializer(many=True, read_only=True)
     project=ProjectSerializer(many=True, read_only=True)
     tasks=TaskSerializer(many=True, read_only=True)
+    banks=BankSerializer(many=True, read_only=True)
 
     class Meta:
         model = Employee
-        fields = '__all__'
+        fields = ['profile_pic','name', 'email','contact','role', 'salary','resume','date_joined','documents','assets','slips','banks','project','tasks']

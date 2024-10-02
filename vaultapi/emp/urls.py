@@ -10,7 +10,7 @@ router.register('asset/', AssetSet, basename='asset')
 router.register('slips/', SalarySleepSet, basename='slips')
 router.register('project/', ProjectSet, basename='project')
 router.register('task/', TaskSet, basename='task')
-
+router.register('banks/', BankSet, basename='banks')
 
 urlpatterns = [
     path('register_employee/', register_employee, name='register_employee'),
@@ -41,4 +41,6 @@ urlpatterns = [
     path('detail_email/<int:pk>/', detail_email, name='detail_email'),
     path('sent_box/', sent_box, name='sent_box'),
     path('clear_email/<int:pk>/', clear_email, name='clear_email'),
+    path('set_accounts/<int:pk>/', set_accounts, name='set_accounts'),
+    path('send_slips/<int:pk>/', send_slips, name='send_slips')
 ]

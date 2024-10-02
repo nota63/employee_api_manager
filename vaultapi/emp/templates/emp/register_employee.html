@@ -624,10 +624,40 @@ a button:disabled {
 }
 
 
+/* Default light theme */
+:root {
+    --background-color: #ffffff;
+    --text-color: #000000;
+    --button-bg-color: #f1f1f1;
+}
 
+/* Dark theme variables */
+body.dark-theme {
+    --background-color: #121212;
+    --text-color: #e0e0e0;
+    --button-bg-color: #333333;
+}
 
+/* Applying the variables */
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
 
+button {
+    background-color: var(--button-bg-color);
+    color: var(--text-color);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
 
+button:hover {
+    opacity: 0.8;
+}
 
 
     </style>
@@ -636,6 +666,7 @@ a button:disabled {
 <body>
 
     <h1>Employee API Database Manager</h1>
+
 
  <section class="compact-api-manager">
     {% if user.is_authenticated %}
@@ -784,6 +815,13 @@ a button:disabled {
                              <a href="{% url 'edit_emp' a.id%}">
                                 <button type="submit">Edit profile</button>
                             </a>
+                            <a href="{% url 'set_accounts' a.id%}">
+                                <button type="submit">Set Accounts</button>
+                            </a>
+                            <a href="{% url 'send_slips' a.id%}">
+                                <button type="submit">Send Slips</button>
+                            </a>
+                        
                         </div>
                     {% endfor %}
                 </div>

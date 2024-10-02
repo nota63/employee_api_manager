@@ -1,5 +1,5 @@
 from django import forms
-from .models import Employee, Document, Assets, SalarySlips, Project, Task, Email
+from .models import Employee, Document, Assets, SalarySlips, Project, Task, Email, Banks, SendSlip
 
 
 class EmployeeForm(forms.ModelForm):
@@ -63,3 +63,28 @@ class EmailFor(forms.ModelForm):
         model=Email
         fields='__all__'
         exclude=['user','date','status']
+
+class BankForm(forms.ModelForm):
+    class Meta:
+        model=Banks
+        fields='__all__'
+        exclude=['user','employee','updated_at']
+        widgets = {
+            'account_number': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Account Number'}),
+            'bank_name':forms.TextInput(attrs={'class':'form-control', 'placeholder':'Enter Bank Name'}),
+            'ifsc_code':forms.TextInput(attrs={'class':'form-control', 'placeholder':'Enter IFSC Code'}),
+            'upi_id':forms.TextInput(attrs={'class':'form-control', 'placeholder':'Enter UPI ID'}),       
+        }
+
+
+class SendSlipsForm(forms.ModelForm):
+    class Meta:
+        model = SendSlip
+        fields ='__all__'
+        exclude=['user','employee']
+        widgets = {
+            'month': forms.TextInput(attrs={'required': True}),
+            'basic_salary': forms.NumberInput(attrs={'required': True}),
+            'allowances': forms.NumberInput(attrs={'required': False}),
+            'deductions': forms.NumberInput(attrs={'required': False}),
+        }

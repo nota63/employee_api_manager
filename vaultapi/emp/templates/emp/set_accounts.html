@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Bank Account Setup</title>
+
+    <!-- Premium Google Fonts for smaller, cleaner design -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            font-size: 11px;
+            margin: 0;
+            padding: 0;
+            background-color: #f2f2f2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            animation: appOpen 0.8s ease-out;
+        }
+
+        @keyframes appOpen {
+            0% {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        h1 {
+            font-family: 'Poppins', serif;
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        p, strong {
+            font-size: 0.85rem;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 5px 0;
+        }
+
+        section {
+            margin-bottom: 15px;
+            width: 100%;
+            max-width: 360px;
+        }
+
+        /* Form container styling */
+        form {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 12px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            overflow-y: auto;
+        }
+
+        form button {
+            width: 100%;
+            padding: 6px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+
+        form button:hover {
+            background-color: #45a049;
+        }
+
+        a {
+            text-decoration: none;
+            font-size: 0.75rem;
+            color: #007BFF;
+            display: inline-block;
+            margin-top: 8px;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 360px;
+            padding: 16px;
+            background-color: #ffffff;
+            border-radius: 6px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Employee Info with Icons */
+        .employee-info strong {
+            display: flex;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .employee-info strong i {
+            margin-right: 6px;
+            color: #007BFF;
+        }
+
+        /* Spinner */
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top-color: #007bff;
+            animation: spin 1s linear infinite;
+            margin: 15px auto;
+            display: none;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading .spinner {
+            display: block;
+        }
+
+        /* Success Message */
+        .msg {
+            background-color: #28a745;
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+            opacity: 0;
+            transform: translateY(-20px);
+            animation: fadeInMessage 1s ease forwards;
+        }
+
+        @keyframes fadeInMessage {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .blue-text {
+    color: blue;
+    font-size: 0.95rem; /* Optional: adjust the font size */
+}
+
+    </style>
+
+    <script>
+        // Spinner logic to prevent multiple form submissions
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.querySelector('form');
+            const spinner = document.querySelector('.spinner');
+            const submitButton = document.querySelector('form button');
+
+            form.addEventListener('submit', function (event) {
+                spinner.style.display = 'block'; // Show spinner
+                submitButton.disabled = true; // Disable button
+            });
+        });
+    </script>
+</head>
+<body>
+
+    <!-- Compact Spinner -->
+    <div class="spinner"></div>
+
+    <section class="msg">
+        {% if messages %}
+            {% for m in messages %}
+                <strong>{{ m }}</strong>
+            {% endfor %}
+        {% endif %}
+    </section>
+
+    <div class="container">
+        <h1><i class="fas fa-user-circle"></i> Bank Account Setup</h1>
+        <p class="blue-text">Set up the bank account for {{employee.name}} to facilitate salary payment</p>
+        ts.</p>
+
+        <section class="employee-info">
+            <strong><i class="fas fa-user"></i> Name: {{employee.name}}</strong>
+            <strong><i class="fas fa-envelope"></i> Email: {{employee.email}}</strong>
+            <strong><i class="fas fa-briefcase"></i> Role: {{employee.role}}</strong>
+            <strong><i class="fas fa-dollar-sign"></i> Salary: {{employee.salary}}</strong>
+        </section>
+
+        <p>Current Time: {{actual_time}}</p>
+
+        <section>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{form.as_p}}
+                <button type="submit"><i class="fas fa-paperclip"></i> Attach</button>
+            </form>
+        </section>
+
+        <a href="{% url 'register_employee' %}"><i class="fas fa-arrow-left"></i> Back</a>
+    </div>
+</body>
+</html>

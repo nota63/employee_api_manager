@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salary Slip Form</title>
+    <!-- Premium Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 18px;
+            font-weight: 500;
+            text-align: center;
+            margin-bottom: 15px;
+            color: #444;
+        }
+
+        .container-wrapper {
+            display: flex;
+            justify-content: space-between;
+            width: 700px;
+            gap: 10px;
+        }
+
+        .container {
+            background-color: #fff;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.08);
+            padding: 10px;
+            border-radius: 8px;
+            width: 320px;
+            height: 450px;
+            overflow: hidden;
+        }
+
+        /* Scrollable form */
+        .form-container {
+            overflow-y: auto;
+            height: 100%;
+        }
+
+        form button {
+            padding: 7px 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            margin-top: 10px;
+            display: block;
+            width: 100%;
+        }
+
+        form button:hover {
+            background-color: #0056b3;
+        }
+
+        form p {
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        /* Employee Info */
+        .employee-info-container h2 {
+            font-weight: 500;
+            margin-bottom: 10px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        .employee-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .employee-profile-pic {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
+            border: 3px solid #007bff;
+        }
+
+        .employee-info p {
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+
+        .employee-info strong {
+            font-weight: 500;
+        }
+
+        a.profile-link {
+            color: #007bff;
+            text-decoration: none;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+
+        a.profile-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Spinner for lazy loading */
+        .spinner {
+            display: none;
+            margin: 20px auto;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid #007bff;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Show the spinner when submitting */
+        .loading .spinner {
+            display: block;
+        }
+
+        /* Scrollbar styling */
+        .form-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .form-container::-webkit-scrollbar-thumb {
+            background-color: #007bff;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Heading at the top -->
+
+    <section>
+        {% if messages %}
+          {% for m in messages %}
+             <strong>{{m}}</strong>
+          {% endfor %}
+        {% endif %}     
+    </section>
+    <div class="container-wrapper">
+        <!-- Left container for the form -->
+        <div class="container">
+            <h2 style="text-align: center; margin-bottom: 10px;">Generate Salary Slip for {{employee.name}}</h2>
+            <div class="form-container">
+                <form id="salary-slip-form" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit">Generate Slip</button>
+                </form>
+                <!-- Spinner shown after form submission -->
+                <div class="spinner"></div>
+            </div>
+        </div>
+
+        <!-- Right container for employee info -->
+        <div class="container employee-info-container">
+            <h2>Employee Info</h2>
+            <div class="employee-info">
+                <img src="{{ employee.profile_pic.url }}" alt="Profile Picture" class="employee-profile-pic">
+                <a href="{{ employee.profile_pic.url }}" class="profile-link">View Profile Picture</a>
+                <p><strong>Name:</strong> {{ employee.name }}</p>
+                <p><strong>Role:</strong> {{ employee.role }}</p>
+                <p><strong>Salary:</strong> {{ employee.salary }}</p>
+                <p><strong>Date Joined:</strong> {{ employee.date_joined }}</p>
+                <p><strong>Contact:</strong> {{ employee.contact }}</p>
+                <p><strong>Bank Name:</strong>{{employee.bank_name}}</p>
+                <p><strong>Account Number:</strong>{{employee.account_number}}</p>
+                <p><strong>UPI ID:</strong>{{employee.upi_id}}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript for lazy loading after form submission -->
+    <script>
+        const form = document.getElementById('salary-slip-form');
+        const spinner = document.querySelector('.spinner');
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault(); // Prevent default form submission
+
+            // Add a class to show the spinner
+            form.classList.add('loading');
+
+            // Simulate a short delay to show the spinner before submitting
+            setTimeout(() => {
+                // Submit the form after delay
+                form.submit();
+            }, 1000); // Adjust delay as needed
+        });
+    </script>
+
+</body>
+
+</html>

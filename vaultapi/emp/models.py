@@ -12,6 +12,9 @@ class Employee(models.Model):
     role = models.CharField(max_length=100)
     salary = models.IntegerField()
     resume = models.FileField(upload_to='resumes', null=True, blank=True)
+    bank_name=models.CharField(max_length=100, null=True)
+    account_number=models.TextField(null=True)
+    upi_id=models.CharField(max_length=100, null=True)
     date_joined = models.DateTimeField(auto_now=True)
 
     def __str__(self):
@@ -130,3 +133,34 @@ class Email(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.subject}"
+    
+class Banks(models.Model):
+    user=models.ForeignKey(User, on_delete=models.CASCADE)
+    employee=models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='banks')
+    bank_name=models.CharField(max_length=100)
+    account_number=models.CharField(max_length=100)
+    ifsc_code=models.CharField(max_length=100)
+    upi_id=models.CharField(max_length=100)
+    updated_at=models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f'{self.bank_name}'
+
+
+class SendSlip(models.Model):
+    company_name = models.CharField(max_length=100, default='DjangoRest')
+    employee =models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='send_slip') 
+    user=models.ForeignKey(User, on_delete=models.CASCADE)
+    month = models.CharField(max_length=20)
+    present_days=models.IntegerField(null=True)
+    basic_salary = models.DecimalField(max_digits=10, decimal_places=2)
+    allowances = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    deductions = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    status=models.CharField(max_length=100, default='Paid', null=True)
+    payment_method=models.CharField(max_length=100,default='paytm', choices=(('paytm','paytm'), ('phone_pe','phone_pe'),('net_banking','net_banking'),('others','others')), null=True)
+    created_at=models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.employee_name} - {self.month}"
+
+

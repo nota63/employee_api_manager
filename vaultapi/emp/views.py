@@ -1,11 +1,11 @@
 import os
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Employee, Document, Assets, SalarySlips, Project, Task,Email
-from .forms import EmployeeForm, DocumentForm, AssetsForm, SalaryForm, ProjectForm, EmailForm, TaskForm, EmailFor
+from .models import Employee, Document, Assets, SalarySlips, Project, Task,Email, Banks, SendSlip
+from .forms import EmployeeForm, DocumentForm, AssetsForm, SalaryForm, ProjectForm, EmailForm, TaskForm, EmailFor, BankForm, SendSlipsForm
 from django.contrib import messages
 from .serializers import EmployeeSerializer, DocumentSerializer, AssetSerializer, SalarySlipsSerializer, \
-    ProjectSerializer, TaskSerializer
+    ProjectSerializer, TaskSerializer, BankSerializer
 from rest_framework import viewsets
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAdminUser, IsAuthenticatedOrReadOnly, IsAuthenticated
@@ -26,7 +26,8 @@ from django.core.mail import send_mail
 from django.core.mail import EmailMessage
 from django.conf import settings, Settings
 import pyttsx3
-
+from PIL import Image, ImageDraw, ImageFont
+import io
 
 # Create your views here.
 
@@ -727,10 +728,182 @@ def pygame_notify():
     # Deactivate pygame mixer (optional, but good practice)
     pygame.mixer.quit()
 
+# bank area 
+@login_required
+def set_accounts(request,pk):
+    employee=get_object_or_404(Employee, pk=pk)
+    if request.method == 'POST':
+        form = BankForm(request.POST, request.FILES)
+        if form.is_valid:
+            try:
+              bank=form.save(commit=False)
+              bank.employee=employee
+              bank.user=request.user
+              bank.save()
+              send_mail(
+                  subject="Bank Account Attached",
+                  message=f'''Hey There {employee.name} we have attached your bank account to you kindly review bank account info\n
+                  'Bank Account:\n
+                         Bank Name: {bank.bank_name}\n
+                         IFSC Code: {bank.ifsc_code}\n 
+                         Account Number: {bank.account_number}\n
+                         UPI ID: {bank.upi_id}\n
+                         Updated At: {bank.updated_at}\n 
+                  If you face any issues with this info kindly contact us on example@gmail.com\n
+                  Thank You Team Django.
+                  ''',
+                  from_email=settings.EMAIL_HOST_USER,
+                  recipient_list=[employee.email],         
+              )
+            except Exception as e:
+                return JsonResponse({'msg':str(e)}, status=400)
+            messages.success(request, f'Bank account attached successfully to {employee.name}')
+            time.sleep(1)
+            pygame_notify()
+            return redirect('set_accounts',pk=employee.pk)
+    else:
+        form=BankForm
+    actual_time = time.strftime("%d-%m-%y %H:%M:%S", time.localtime())         
+    return render(request,'emp/set_accounts.html', {'form':form, 'employee':employee,'actual_time':actual_time})
+
+# for sendslips
+import re
+# end of import materials
+import io
+from PIL import Image, ImageDraw, ImageFont
+from django.core.mail import EmailMessage
+from django.conf import settings
+from django.shortcuts import get_object_or_404
+from django.contrib import messages
+
+@login_required
+def send_slips(request, pk):
+    employee = get_object_or_404(Employee, pk=pk)
+
+    if request.method == 'POST':
+        form = SendSlipsForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            salary_slip = form.save(commit=False)
+            total_salary = salary_slip.basic_salary + (salary_slip.allowances or 0) - (salary_slip.deductions or 0)
+
+            # Generate the salary slip image
+            img = Image.new('RGB', (600, 400), color='white')
+            d = ImageDraw.Draw(img)
+
+            # Load a font (you can adjust this or load a specific font if needed)
+            font = ImageFont.load_default()
+
+            # Define starting position for text
+            x_start = 10
+            y_start = 10
+            line_height = 30  # Define spacing between lines
+
+            # Draw text on the image
+            d.text((x_start, y_start), f"Salary Slip for: {salary_slip.month}", fill=(0, 0, 0), font=font)
+            y_start += line_height
+            d.text((x_start, y_start), f"Company Name: {salary_slip.company_name}", fill=(0, 0, 0), font=font)
+            y_start += line_height
+            d.text((x_start, y_start), f"Employee Name: {employee.name}", fill=(0, 0, 0), font=font)
+            y_start += line_height
+            d.text((x_start, y_start), f"Employee Role: {employee.role}", fill=(0, 0, 0), font=font)
+            y_start += line_height
+            d.text((x_start, y_start), f"Present Days: {salary_slip.present_days}", fill=(0, 0, 0), font=font)
+            y_start += line_height
+            d.text((x_start, y_start), f"Basic Salary: {salary_slip.basic_salary}", fill=(0, 0, 0), font=font)
+            y_start += line_height
+            d.text((x_start, y_start), f"Allowances: {salary_slip.allowances or 0}", fill=(0, 0, 0), font=font)
+            y_start += line_height
+            d.text((x_start, y_start), f"Deductions: {salary_slip.deductions or 0}", fill=(0, 0, 0), font=font)
+            y_start += line_height
+            d.text((x_start, y_start), f"Total Salary: {total_salary}", fill=(0, 0, 0), font=font)
+            y_start += line_height
+            d.text((x_start, y_start), f"Payment Method: {salary_slip.payment_method}", fill=(0, 0, 0), font=font)
+            y_start += line_height
+            d.text((x_start, y_start), f"Status: {salary_slip.status}", fill=(0, 0, 0), font=font)
+            y_start += line_height
+            d.text((x_start, y_start), f"Generated At: {salary_slip.created_at}", fill=(0, 0, 0), font=font)
+
+            # Save the image to a BytesIO object
+            image_io = io.BytesIO()
+            img.save(image_io, 'PNG')
+            image_io.seek(0)  # Move the pointer to the start of the file
+
+            # Save the SalarySlip instance
+            salary_slip.employee = employee
+            salary_slip.user = request.user
+            salary_slip.save()
+
+            # Create a professional HTML structure for the email body
+            html_content = f"""
+            <html>
+            <body>
+                <h2 style="color: #4CAF50;">Salary Slip for {salary_slip.month}</h2>
+                <p>Dear {employee.name},</p>
+                <p>Hello {employee.name} Your salary for the month <strong>{salary_slip.month}</strong> has been generated. Below are the details:</p>
+                
+                <table border="1" cellpadding="10" cellspacing="0" style="border-collapse: collapse; width: 100%; font-family: Arial, sans-serif;">
+                    <tr style="background-color: #f2f2f2;">
+                        <th>Detail</th>
+                        <th>Amount</th>
+                    </tr>
+                    <tr>
+                        <td>Basic Salary</td>
+                        <td>{salary_slip.basic_salary}</td>
+                    </tr>
+                    <tr>
+                        <td>Allowances</td>
+                        <td>{salary_slip.allowances or 0}</td>
+                    </tr>
+                    <tr>
+                        <td>Deductions</td>
+                        <td>{salary_slip.deductions or 0}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Total Salary</strong></td>
+                        <td><strong>{total_salary}</strong></td>
+                    </tr>
+                </table>
+                
+                <p><strong>Payment Method:</strong> {salary_slip.payment_method}</p>
+                <p><strong>Status:</strong> {salary_slip.status}</p>
+                <p><strong>Generated At:</strong> {salary_slip.created_at}</p>
+                <p>Thank you for your hard work!</p>
+                
+                <p>Best regards,</p>
+                <p><strong>{salary_slip.company_name}</strong></p>
+            </body>
+            </html>
+            """
+
+            subject = 'Salary Credit'
+            from_email = settings.EMAIL_HOST_USER
+            to_email = [employee.email]
+
+            # Create EmailMessage object
+            email = EmailMessage(subject, html_content, from_email, to_email)
+
+            # Attach the image from memory (BytesIO object)
+            email.attach('salary_slip.png', image_io.getvalue(), 'image/png')
+
+            # Set content_subtype to 'html' so that the email is rendered as HTML
+            email.content_subtype = 'html'
+
+            # Send email
+            email.send()
+
+            messages.success(request, f'Email with salary slip has been sent to {employee.name}.')
+            pygame_notify()
+
+    else:
+        form = SendSlipsForm
+    actual_time = time.strftime("%d-%m-%y %H:%M:%S", time.localtime())    
+    return render(request, 'emp/send_slip.html', {'form': form,'actual_time':actual_time,'employee':employee})
+
+
 
 # serializer
 class EmployeeSet(viewsets.ModelViewSet):
-    queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
@@ -740,8 +913,12 @@ class EmployeeSet(viewsets.ModelViewSet):
     throttle_classes = [AnoThrottle, UserThrottleRate]
 
 
+    def get_queryset(self):
+        user = self.request.user
+        return Employee.objects.filter(user=user) 
+
+
 class DocumentSet(viewsets.ModelViewSet):
-    queryset = Document.objects.all()
     serializer_class = DocumentSerializer
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
@@ -749,9 +926,12 @@ class DocumentSet(viewsets.ModelViewSet):
     search_fields = ['^employee']
     pagination_class = MyPageNumberPagination
 
+    def get_queryset(self):
+        user=self.request.user
+        return Document.objects.filter(user=user)
+
 
 class AssetSet(viewsets.ModelViewSet):
-    queryset = Assets.objects.all()
     serializer_class = AssetSerializer
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
@@ -759,9 +939,12 @@ class AssetSet(viewsets.ModelViewSet):
     search_fields = ['^asset_name']
     pagination_class = MyPageNumberPagination
 
+    def get_queryset(self):
+        user=self.request.user
+        return Assets.objects.filter(user=user)
+
 
 class SalarySleepSet(viewsets.ModelViewSet):
-    queryset = SalarySlips.objects.all()
     serializer_class = SalarySlipsSerializer
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
@@ -769,9 +952,12 @@ class SalarySleepSet(viewsets.ModelViewSet):
     search_fields = ['^amount']
     pagination_class = MyPageNumberPagination
 
+    def get_queryset(self):
+        user=self.request.user
+        return SalarySlips.objects.filter(user=user)
+
 
 class ProjectSet(viewsets.ModelViewSet):
-    queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
@@ -779,12 +965,36 @@ class ProjectSet(viewsets.ModelViewSet):
     search_fields = ['^name']
     pagination_class = MyPageNumberPagination
 
+    def get_queryset(self):
+        user=self.request.user
+        return Project.objects.filter(user=user)
+
 
 class TaskSet(viewsets.ModelViewSet):
-    queryset = Task.objects.all()
     serializer_class = TaskSerializer
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
     filter_backends = [SearchFilter]
     search_fields = ['^task']
     pagination_class = MyPageNumberPagination
+
+    def get_queryset(self):
+        user=self.request.user
+        return Task.objects.filter(user=user)
+
+
+class BankSet(viewsets.ModelViewSet):
+    serializer_class= BankSerializer
+    authentication_classes=[SessionAuthentication]
+    permission_classes=[IsAuthenticated]
+    filter_backends=[SearchFilter]
+    pagination_class=MyPageNumberPagination
+
+    def get_queryset(self):
+        user=self.request.user
+        return Banks.objects.filter(user=user)
+
+
+
+
+   
